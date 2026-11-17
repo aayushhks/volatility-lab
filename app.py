@@ -11,7 +11,7 @@ st.title('Volatility Lab')
 st.caption('From option quotes to implied volatility. Explore the surface, inspect the data, understand the assumptions.')
 with st.sidebar:
     st.header('Research controls')
-    mode=st.radio('Data source',['Synthetic demo','Yahoo Finance','CSV upload'])
+    mode=st.radio('Data source',['Yahoo Finance','Synthetic demo','CSV upload'])
     scenario=st.selectbox('Demo scenario',['Balanced','Steep skew','Short-term stress']) if mode=='Synthetic demo' else 'Balanced'
     rate=st.number_input('Risk-free rate (%)',-10.,30.,4.,.25)/100
     q=st.number_input('Continuous dividend yield (%)',0.,30.,1.,.25)/100
@@ -71,18 +71,19 @@ else:
         st.warning(str(exc))
     else:
         grid=good.pivot_table(index='days',columns='moneyness',values='iv',aggfunc='median').reindex(index=y,columns=x)*100
-        fig=go.Figure(go.Surface(x=x,y=y,z=grid.values,colorscale='Teal',connectgaps=False,colorbar_title='IV %'))
+        fig=go.Figure(go.Surface(x=x,y=y,z=grid.values,colorscale=[[0,'#172554'],[0.25,'#1d4ed8'],[0.5,'#0891b2'],[0.75,'#14b8a6'],[1,'#f59e0b']],connectgaps=False,colorbar_title='IV %'))
         fig.update_layout(height=570,margin=dict(l=0,r=0,t=10,b=0),scene=dict(xaxis_title='Strike / spot',yaxis_title='Days to expiry',zaxis_title='IV (%)'))
         st.plotly_chart(fig,width='stretch')
+        st.caption('Color scale: navy = lower IV, cyan/teal = middle, amber = higher IV.')
         st.caption('Surface connects adjacent valid grid points for display only; missing quotes remain gaps. Not an arbitrage-free calibrated surface.')
         left,right=st.columns(2)
         with left:
             expiry=st.selectbox('Smile slice: days to expiry',y)
             sl=good[good.days==expiry].sort_values('moneyness')
-            st.plotly_chart(go.Figure(go.Scatter(x=sl.moneyness,y=sl.iv*100,mode='lines+markers')).update_layout(xaxis_title='Strike / spot',yaxis_title='IV (%)',height=300),width='stretch')
+            st.plotly_chart(go.Figure(go.Scatter(x=sl.moneyness,y=sl.iv*100,mode='lines+markers',line=dict(color='#0e7490',width=3),marker=dict(size=7))).update_layout(xaxis_title='Strike / spot',yaxis_title='IV (%)',height=300),width='stretch')
         with right:
             nearest=good.assign(distance=abs(good.moneyness-1)).sort_values('distance').groupby('days').first().reset_index()
-            st.plotly_chart(go.Figure(go.Scatter(x=nearest.days,y=nearest.iv*100,mode='lines+markers')).update_layout(title='Nearest-to-spot term structure',xaxis_title='Days',yaxis_title='IV (%)',height=300),width='stretch')
+            st.plotly_chart(go.Figure(go.Scatter(x=nearest.days,y=nearest.iv*100,mode='lines+markers',line=dict(color='#b45309',width=3),marker=dict(size=7))).update_layout(title='Nearest-to-spot term structure',xaxis_title='Days',yaxis_title='IV (%)',height=300),width='stretch')
             st.caption('Each expiry uses its closest available strike, so this is not constant-delta or interpolated ATM volatility.')
 with st.expander('Quote audit and exclusions',expanded=True):
     st.dataframe(audit,width='stretch',hide_index=True)
