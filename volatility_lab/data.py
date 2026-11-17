@@ -26,6 +26,7 @@ def demo(name='Balanced'):
 
 def fetch_yahoo(symbol,max_expiries=8):
     import yfinance as yf
+    from yfinance.exceptions import YFRateLimitError
     ticker=yf.Ticker(symbol)
     hist=ticker.history(period='5d',auto_adjust=False)
     if hist.empty: raise ValueError('No underlying prices returned for this ticker.')
@@ -49,6 +50,8 @@ def fetch_yahoo(symbol,max_expiries=8):
                         raise ValueError('Quote limit reached (20,000); request fewer expiries.')
                     rows.append(dict(strike=float(row['strike']),days=days,bid=float(row['bid']),ask=float(row['ask']),kind=kind,
                         open_interest=float(row.get('openInterest',0)),expiry=expiry,last_trade=str(row.get('lastTradeDate',''))))
+        except YFRateLimitError:
+            raise
         except Exception as exc:
             errors.append(f'{expiry}: {type(exc).__name__}: {exc}')
     if not rows: raise ValueError('Provider returned no usable chains. '+ '; '.join(errors))

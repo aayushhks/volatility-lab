@@ -4,6 +4,11 @@ import plotly.graph_objects as go
 import streamlit as st
 from volatility_lab.core import analyze
 from volatility_lab.data import demo,fetch_yahoo
+from volatility_lab.market_cache import MarketCache
+
+@st.cache_resource
+def market_service():
+    return MarketCache(fetch_yahoo)
 from volatility_lab.limits import MAX_QUOTES, check_upload_size, check_surface_size
 
 st.set_page_config(page_title='Volatility Lab',page_icon='〰',layout='wide')
@@ -22,12 +27,13 @@ with st.sidebar:
     if mode=='Synthetic demo': raw=demo(scenario)
     elif mode=='Yahoo Finance':
         symbol=st.text_input('Ticker','SPY').strip().upper()
-        n=st.slider('Maximum expiries to request',1,12,6)
+        n=st.slider('Maximum expiries to request',1,12,3)
         if st.button('Fetch option chains',type='primary'):
             try:
                 with st.spinner('Requesting option chains…'):
-                    st.session_state['market']=fetch_yahoo(symbol,n)
+                    st.session_state['market']=market_service().get(symbol,n)
             except Exception as exc: st.error(f'Live fetch failed: {exc}. Try CSV or the synthetic demo.')
+        st.caption('Quotes are cached for 10 minutes. Failed requests pause new fetches for 5 minutes. Yahoo availability is not guaranteed.')
         raw=st.session_state.get('market')
         if raw and raw['symbol']!=symbol: st.info('Displayed snapshot is for '+raw['symbol']+'. Fetch to change it.')
     else:
