@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 from math import log, sqrt
 from .core import price
+from .limits import MAX_QUOTES
 
 def demo(name='Balanced'):
     """Deterministic synthetic European quotes, NOT historical/live prices."""
@@ -44,6 +45,8 @@ def fetch_yahoo(symbol,max_expiries=8):
             if days<=0: continue
             for kind,frame in [('call',chain.calls),('put',chain.puts)]:
                 for _,row in frame.iterrows():
+                    if len(rows)>=MAX_QUOTES:
+                        raise ValueError('Quote limit reached (20,000); request fewer expiries.')
                     rows.append(dict(strike=float(row['strike']),days=days,bid=float(row['bid']),ask=float(row['ask']),kind=kind,
                         open_interest=float(row.get('openInterest',0)),expiry=expiry,last_trade=str(row.get('lastTradeDate',''))))
         except Exception as exc:

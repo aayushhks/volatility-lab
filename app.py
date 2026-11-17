@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from volatility_lab.core import analyze
 from volatility_lab.data import demo,fetch_yahoo
+from volatility_lab.limits import MAX_QUOTES, check_upload_size, check_surface_size
 
 st.set_page_config(page_title='Volatility Lab',page_icon='〰',layout='wide')
 st.title('Volatility Lab')
@@ -35,11 +36,12 @@ with st.sidebar:
         spot=st.number_input('Underlying spot',min_value=.01,value=100.)
         if upload:
             try:
-                frame=pd.read_csv(upload)
+                check_upload_size(upload.size)
+                frame=pd.read_csv(upload,nrows=MAX_QUOTES+1)
                 missing=set(['strike','days','bid','ask','kind'])-set(frame.columns)
                 if missing: st.error('Missing columns: '+', '.join(sorted(missing)))
                 elif frame.empty: st.error('The CSV contains no quote rows.')
-                elif len(frame)>20000: st.error('Limit: 20,000 quote rows.')
+                elif len(frame)>MAX_QUOTES: st.error('Limit: 20,000 quote rows.')
                 else: raw=dict(symbol='CSV',spot=spot,rows=frame.to_dict('records'),source='User-provided CSV')
             except Exception as exc: st.error('Cannot parse CSV: '+str(exc))
 
@@ -63,20 +65,25 @@ if good.empty:
     st.warning('No quotes passed these filters. Inspect the audit below or adjust the assumptions.')
 else:
     x=sorted(good.moneyness.unique()); y=sorted(good.days.unique())
-    grid=good.pivot_table(index='days',columns='moneyness',values='iv',aggfunc='median').reindex(index=y,columns=x)*100
-    fig=go.Figure(go.Surface(x=x,y=y,z=grid.values,colorscale='Teal',connectgaps=False,colorbar_title='IV %'))
-    fig.update_layout(height=570,margin=dict(l=0,r=0,t=10,b=0),scene=dict(xaxis_title='Strike / spot',yaxis_title='Days to expiry',zaxis_title='IV (%)'))
-    st.plotly_chart(fig,width='stretch')
-    st.caption('Surface connects adjacent valid grid points for display only; missing quotes remain gaps. Not an arbitrage-free calibrated surface.')
-    left,right=st.columns(2)
-    with left:
-        expiry=st.selectbox('Smile slice: days to expiry',y)
-        sl=good[good.days==expiry].sort_values('moneyness')
-        st.plotly_chart(go.Figure(go.Scatter(x=sl.moneyness,y=sl.iv*100,mode='lines+markers')).update_layout(xaxis_title='Strike / spot',yaxis_title='IV (%)',height=300),width='stretch')
-    with right:
-        nearest=good.assign(distance=abs(good.moneyness-1)).sort_values('distance').groupby('days').first().reset_index()
-        st.plotly_chart(go.Figure(go.Scatter(x=nearest.days,y=nearest.iv*100,mode='lines+markers')).update_layout(title='Nearest-to-spot term structure',xaxis_title='Days',yaxis_title='IV (%)',height=300),width='stretch')
-        st.caption('Each expiry uses its closest available strike, so this is not constant-delta or interpolated ATM volatility.')
+    try:
+        check_surface_size(len(x),len(y))
+    except ValueError as exc:
+        st.warning(str(exc))
+    else:
+        grid=good.pivot_table(index='days',columns='moneyness',values='iv',aggfunc='median').reindex(index=y,columns=x)*100
+        fig=go.Figure(go.Surface(x=x,y=y,z=grid.values,colorscale='Teal',connectgaps=False,colorbar_title='IV %'))
+        fig.update_layout(height=570,margin=dict(l=0,r=0,t=10,b=0),scene=dict(xaxis_title='Strike / spot',yaxis_title='Days to expiry',zaxis_title='IV (%)'))
+        st.plotly_chart(fig,width='stretch')
+        st.caption('Surface connects adjacent valid grid points for display only; missing quotes remain gaps. Not an arbitrage-free calibrated surface.')
+        left,right=st.columns(2)
+        with left:
+            expiry=st.selectbox('Smile slice: days to expiry',y)
+            sl=good[good.days==expiry].sort_values('moneyness')
+            st.plotly_chart(go.Figure(go.Scatter(x=sl.moneyness,y=sl.iv*100,mode='lines+markers')).update_layout(xaxis_title='Strike / spot',yaxis_title='IV (%)',height=300),width='stretch')
+        with right:
+            nearest=good.assign(distance=abs(good.moneyness-1)).sort_values('distance').groupby('days').first().reset_index()
+            st.plotly_chart(go.Figure(go.Scatter(x=nearest.days,y=nearest.iv*100,mode='lines+markers')).update_layout(title='Nearest-to-spot term structure',xaxis_title='Days',yaxis_title='IV (%)',height=300),width='stretch')
+            st.caption('Each expiry uses its closest available strike, so this is not constant-delta or interpolated ATM volatility.')
 with st.expander('Quote audit and exclusions',expanded=True):
     st.dataframe(audit,width='stretch',hide_index=True)
     st.download_button('Download full audit CSV',audit.to_csv(index=False),'volatility-audit.csv','text/csv')
