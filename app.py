@@ -28,11 +28,17 @@ with st.sidebar:
     elif mode=='Yahoo Finance':
         symbol=st.text_input('Ticker','SPY').strip().upper()
         n=st.slider('Maximum expiries to request',1,12,3)
-        if st.button('Fetch option chains',type='primary'):
+        fetch_clicked=st.button('Fetch option chains',type='primary')
+        if fetch_clicked or not st.session_state.get('yahoo_initial_fetch_attempted',False):
+            st.session_state['yahoo_initial_fetch_attempted']=True
+            st.session_state.pop('yahoo_fetch_error',None)
             try:
                 with st.spinner('Requesting option chains…'):
                     st.session_state['market']=market_service().get(symbol,n)
-            except Exception as exc: st.error(f'Live fetch failed: {exc}. Try CSV or the synthetic demo.')
+            except Exception as exc:
+                st.session_state['yahoo_fetch_error']=f'Yahoo quotes could not be loaded: {exc}. Choose Synthetic demo to explore the charts, or upload a CSV.'
+        if st.session_state.get('yahoo_fetch_error'):
+            st.warning(st.session_state['yahoo_fetch_error'])
         st.caption('Quotes are cached for 10 minutes. Failed requests pause new fetches for 5 minutes. Yahoo availability is not guaranteed.')
         raw=st.session_state.get('market')
         if raw and raw['symbol']!=symbol: st.info('Displayed snapshot is for '+raw['symbol']+'. Fetch to change it.')
