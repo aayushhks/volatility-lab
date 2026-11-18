@@ -1,0 +1,299 @@
+[
+  {
+    "scenario": "Balanced",
+    "seed": 7,
+    "train_quotes": 70,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.3743297168565729,
+        "price_rmse": 0.6239353981330463,
+        "iv_mae_bp": 329.3345547522687,
+        "within_spread_pct": 46.15384615384615
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.39386696380595726,
+        "price_rmse": 0.6025076736102557,
+        "iv_mae_bp": 366.3990755574753,
+        "within_spread_pct": 53.84615384615385
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.03417962174513069,
+        "price_rmse": 0.04350606501477513,
+        "iv_mae_bp": 35.507868491589015,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Balanced",
+    "seed": 42,
+    "train_quotes": 70,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.23305907909506976,
+        "price_rmse": 0.44040435224021374,
+        "iv_mae_bp": 231.37395379896907,
+        "within_spread_pct": 61.53846153846154
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.3070160884280745,
+        "price_rmse": 0.4457321657700828,
+        "iv_mae_bp": 283.56489149521076,
+        "within_spread_pct": 46.15384615384615
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.036550194919551623,
+        "price_rmse": 0.044078385583353565,
+        "iv_mae_bp": 35.780197680094794,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Balanced",
+    "seed": 2026,
+    "train_quotes": 70,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.23676526740198073,
+        "price_rmse": 0.27895006771014697,
+        "iv_mae_bp": 156.25078732864944,
+        "within_spread_pct": 30.76923076923077
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.35242962318940635,
+        "price_rmse": 0.4504435199338142,
+        "iv_mae_bp": 204.48059732993667,
+        "within_spread_pct": 23.076923076923077
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.03895394469201504,
+        "price_rmse": 0.048950868030805186,
+        "iv_mae_bp": 23.119840758828534,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Steep skew",
+    "seed": 7,
+    "train_quotes": 74,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 1.0849824244946737,
+        "price_rmse": 1.682585976915898,
+        "iv_mae_bp": 851.9441921229857,
+        "within_spread_pct": 38.46153846153846
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 1.1135933873306103,
+        "price_rmse": 1.7247245315671338,
+        "iv_mae_bp": 843.2727353332707,
+        "within_spread_pct": 38.46153846153846
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.0587709874227769,
+        "price_rmse": 0.07087177546885168,
+        "iv_mae_bp": 48.88272744192666,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Steep skew",
+    "seed": 42,
+    "train_quotes": 74,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.8561282604357824,
+        "price_rmse": 1.244183243355558,
+        "iv_mae_bp": 632.614424965257,
+        "within_spread_pct": 15.384615384615385
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 1.0321665198731553,
+        "price_rmse": 1.3527973076913444,
+        "iv_mae_bp": 749.3377028679316,
+        "within_spread_pct": 15.384615384615385
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.05917768654028531,
+        "price_rmse": 0.06978532502711575,
+        "iv_mae_bp": 48.5987394851467,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Steep skew",
+    "seed": 2026,
+    "train_quotes": 74,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.6843965550250435,
+        "price_rmse": 0.8207653694989219,
+        "iv_mae_bp": 476.1129278884194,
+        "within_spread_pct": 23.076923076923077
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.8168464640047262,
+        "price_rmse": 0.9479471260461801,
+        "iv_mae_bp": 549.5057600463432,
+        "within_spread_pct": 15.384615384615385
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.0570854125885611,
+        "price_rmse": 0.070003425758817,
+        "iv_mae_bp": 33.450747481158245,
+        "within_spread_pct": 92.3076923076923
+      }
+    ]
+  },
+  {
+    "scenario": "Short-term stress",
+    "seed": 7,
+    "train_quotes": 73,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.49999387776740806,
+        "price_rmse": 0.6671199518758957,
+        "iv_mae_bp": 517.9753332866704,
+        "within_spread_pct": 53.84615384615385
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.48844091798573264,
+        "price_rmse": 0.7409123053558172,
+        "iv_mae_bp": 451.16648855907795,
+        "within_spread_pct": 53.84615384615385
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.03578069913742965,
+        "price_rmse": 0.04339163055956538,
+        "iv_mae_bp": 34.317256995298365,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Short-term stress",
+    "seed": 42,
+    "train_quotes": 73,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.5124478860820603,
+        "price_rmse": 0.6470835851881861,
+        "iv_mae_bp": 448.88121214517355,
+        "within_spread_pct": 30.76923076923077
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.41728626836071486,
+        "price_rmse": 0.5792756335890622,
+        "iv_mae_bp": 372.2958131084985,
+        "within_spread_pct": 30.76923076923077
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.03703749198359086,
+        "price_rmse": 0.04435149122886214,
+        "iv_mae_bp": 34.18933247736438,
+        "within_spread_pct": 100.0
+      }
+    ]
+  },
+  {
+    "scenario": "Short-term stress",
+    "seed": 2026,
+    "train_quotes": 73,
+    "test_quotes": 13,
+    "skipped_quotes": 0,
+    "summary": [
+      {
+        "method": "Global constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.6661355863495125,
+        "price_rmse": 0.890837687962982,
+        "iv_mae_bp": 391.2939435811882,
+        "within_spread_pct": 23.076923076923077
+      },
+      {
+        "method": "Expiry constant IV",
+        "test_quotes": 13,
+        "price_mae": 0.35065342247320597,
+        "price_rmse": 0.40488630628561334,
+        "iv_mae_bp": 257.29575967773576,
+        "within_spread_pct": 15.384615384615385
+      },
+      {
+        "method": "Linear smile interpolation",
+        "test_quotes": 13,
+        "price_mae": 0.03845446843161996,
+        "price_rmse": 0.04767058592247872,
+        "iv_mae_bp": 23.019004065985662,
+        "within_spread_pct": 100.0
+      }
+    ]
+  }
+]

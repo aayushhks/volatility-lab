@@ -73,3 +73,14 @@ The displayed surface joins adjacent grid values. **There is no fitted or arbitr
 - `tests/test_core.py`: numerical and data-quality checks.
 - `dist/`: browser demo loading Plotly.js 2.35.2 from its official CDN for 2D charts (internet required).
 - `scripts/build_demo.py`: reproducible fixture/archive generation.
+
+
+## Held-out quote experiment
+
+The research panel compares global constant IV, expiry-specific constant IV, and linear smile interpolation on identical held-out interior strikes. It reports price MAE/RMSE, IV error, and bid/ask agreement, and exports the complete source snapshot, assumptions, and predictions. It also works offline when Yahoo is unavailable.
+
+Run `python scripts/evaluate_surface.py` to reproduce the committed results in `examples/synthetic-holdout-results.json`: three synthetic scenarios, each evaluated with seeds 7, 42, and 2026. Run `python -m unittest discover -s tests -v` for numerical, cache, memory-bound, and leakage checks.
+
+These fixtures are generated using the same pricing model used for evaluation. They demonstrate interpolation correctness, not market accuracy or alpha. The experiment holds out strikes within a snapshot; it does not forecast future prices, test extrapolation, or enforce arbitrage constraints. Market conclusions require real timestamped snapshots.
+
+[Open the app](https://aayush-volatility-lab.streamlit.app/)

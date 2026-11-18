@@ -5,6 +5,7 @@ import streamlit as st
 from volatility_lab.core import analyze
 from volatility_lab.data import demo,fetch_yahoo
 from volatility_lab.market_cache import MarketCache
+from volatility_lab.research_ui import render as render_research
 
 @st.cache_resource
 def market_service():
@@ -56,6 +57,8 @@ with st.sidebar:
                 elif len(frame)>MAX_QUOTES: st.error('Limit: 20,000 quote rows.')
                 else: raw=dict(symbol='CSV',spot=spot,rows=frame.to_dict('records'),source='User-provided CSV')
             except Exception as exc: st.error('Cannot parse CSV: '+str(exc))
+
+render_research(raw,rate,q,spread,oi,kind)
 
 if raw is None:
     st.info('Fetch a ticker or upload a CSV to begin. Synthetic demo works without network access.')
