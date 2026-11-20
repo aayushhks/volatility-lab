@@ -1,0 +1,33 @@
+name: refresh market snapshot
+on:
+  workflow_dispatch:
+  schedule:
+    # 14:45 EST / 15:45 EDT, while regular-session option quotes are available.
+    - cron: '45 19 * * 1-5'
+permissions:
+  contents: write
+concurrency:
+  group: market-snapshot
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python scripts/refresh_market_snapshot.py
+      - name: save successful snapshot
+        run: |
+          git add examples/market
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "refresh cached market snapshot"
+          git push
